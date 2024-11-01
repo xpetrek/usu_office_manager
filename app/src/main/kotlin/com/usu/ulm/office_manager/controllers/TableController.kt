@@ -1,10 +1,14 @@
+package com.usu.ulm.office_manager.controllers;
+
+import com.usu.ulm.office_manager.entities.OfficeTable
+import com.usu.ulm.office_manager.repositories.TableRepository
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/tables")
 class TableController(private val repository: TableRepository) {
 
-    @GetMapping
+    @GetMapping("/")
     fun findAll() = repository.findAll()
 
     @GetMapping("/{id}")

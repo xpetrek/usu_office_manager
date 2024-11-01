@@ -1,3 +1,5 @@
+package com.usu.ulm.office_manager.entities;
+
 import jakarta.persistence.*
 
 @Entity
@@ -9,5 +11,6 @@ data class Employee(
     val lastName: String,
     val address: String,
     val startDate: String,
-    @OneToOne val officeTable: OfficeTable
+    @OneToOne val officeTable: OfficeTable,
+    @OneToOne val office: Office
 )

@@ -1,3 +1,5 @@
+package com.usu.ulm.office_manager.entities;
+
 import jakarta.persistence.*
 
 @Entity
@@ -7,4 +9,7 @@ data class Office(
     val id: Long = 0,
     val name: String,
     val area: Number,
+
+    @OneToMany
+    val table: List<Table>,
 )

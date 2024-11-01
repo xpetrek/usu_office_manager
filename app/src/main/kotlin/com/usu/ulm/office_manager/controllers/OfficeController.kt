@@ -1,10 +1,14 @@
+package com.usu.ulm.office_manager.controllers;
+
+import com.usu.ulm.office_manager.entities.Office
+import com.usu.ulm.office_manager.repositories.OfficeRepository
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/offices")
 class OfficeController(private val repository: OfficeRepository) {
 
-    @GetMapping
+    @GetMapping("/")
     fun findAll() = repository.findAll()
 
     @GetMapping("/{id}")

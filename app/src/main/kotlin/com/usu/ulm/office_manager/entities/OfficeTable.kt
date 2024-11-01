@@ -1,3 +1,5 @@
+package com.usu.ulm.office_manager.entities;
+
 import jakarta.persistence.*
 
 @Entity
