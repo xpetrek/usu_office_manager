@@ -1,11 +1,12 @@
 package com.usu.ulm.office_manager.controllers;
 
-import com.usu.ulm.office_manager.entities.Office
+import com.usu.ulm.office_manager.entities.OfficeEntity
 import com.usu.ulm.office_manager.repositories.OfficeRepository
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/offices")
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 class OfficeController(private val repository: OfficeRepository) {
 
     @GetMapping("/")
@@ -15,10 +16,10 @@ class OfficeController(private val repository: OfficeRepository) {
     fun findOne(@PathVariable id: Long) = repository.findById(id)
 
     @PostMapping
-    fun create(@RequestBody office: Office) = repository.save(office)
+    fun create(@RequestBody office: OfficeEntity) = repository.save(office)
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody office: Office) {
+    fun update(@PathVariable id: Long, @RequestBody office: OfficeEntity) {
         if (repository.existsById(id)) {
             repository.save(office)
         }

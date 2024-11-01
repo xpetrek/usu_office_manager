@@ -5,8 +5,9 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "employee")
-data class Employee(
+data class EmployeeEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "employee_id")
     val id: Long = 0,
     val firstName: String,
     val lastName: String,
@@ -14,8 +15,10 @@ data class Employee(
     val startDate: String,
 
     @OneToOne
-    val officeTable: OfficeTable? = null,
+    @JoinColumn(name = "office_table_id")
+    val officeTable: OfficeTableEntity? = null,
 
     @OneToOne
-    val office: Office
+    @JoinColumn(name = "office_id")
+    val office: OfficeEntity
 )

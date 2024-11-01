@@ -1,6 +1,6 @@
 package com.usu.ulm.office_manager.repositories;
 
-import com.usu.ulm.office_manager.entities.Employee
+import com.usu.ulm.office_manager.entities.EmployeeEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface EmployeeRepository : JpaRepository<Employee, Long>
+interface EmployeeRepository : JpaRepository<EmployeeEntity, Long>
