@@ -11,5 +11,5 @@ data class Office(
     val area: Number,
 
     @OneToMany
-    val table: List<Table>,
+    val tables: List<OfficeTable>? = null,
 )

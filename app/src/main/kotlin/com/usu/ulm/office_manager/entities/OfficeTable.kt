@@ -1,5 +1,6 @@
 package com.usu.ulm.office_manager.entities;
 
+import jakarta.annotation.Nullable
 import jakarta.persistence.*
 
 @Entity
@@ -11,5 +12,8 @@ data class OfficeTable(
     val utilizedArea: Long,
 
     @ManyToOne
-    val office: Office,
+    val office: Office? = null,
+
+    @OneToOne
+    val employee: Employee? = null
 )
