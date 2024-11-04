@@ -1,5 +1,6 @@
 package com.usu.ulm.office_manager.entities;
 
+import com.example.demo.dto.OfficeTableDTO
 import jakarta.annotation.Nullable
 import jakarta.persistence.*
 

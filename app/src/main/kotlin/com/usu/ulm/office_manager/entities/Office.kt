@@ -1,5 +1,6 @@
 package com.usu.ulm.office_manager.entities;
 
+import com.example.demo.dto.OfficeDTO
 import jakarta.persistence.*
 
 @Entity
@@ -11,7 +12,6 @@ data class OfficeEntity(
     val name: String,
     val area: Int,
 
-    @OneToMany
-    @JoinColumn(name = "office")
+    @OneToMany(mappedBy = "office")
     val tables: List<OfficeTableEntity>? = null,
 )

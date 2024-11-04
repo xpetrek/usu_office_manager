@@ -1,44 +1,42 @@
 package com.usu.ulm.office_manager.controllers
 
-import com.example.demo.dto.OfficeDTO
 import com.example.demo.dto.OfficeTableDTO
-import com.example.demo.dto.toDTO
-import com.usu.ulm.office_manager.entities.OfficeEntity
 import com.usu.ulm.office_manager.entities.OfficeTableEntity
-import com.usu.ulm.office_manager.services.OfficeService
+import com.usu.ulm.office_manager.services.TableService
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/offices")
+@RequestMapping("/tables")
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @Tag(
-    name = "Office",
-)class OfficeController(private val service: OfficeService) {
+    name = "Office table",
+)
+class OfficeTableController(private val service: TableService) {
 
     @GetMapping("/")
-    fun findAll(): ResponseEntity<List<OfficeDTO>> {
+    fun findAll(): ResponseEntity<List<OfficeTableDTO>> {
         return ResponseEntity.ok(service.findAll())
     }
 
     @GetMapping("/{id}")
-    fun findOne(@PathVariable id: Long): ResponseEntity<OfficeDTO> {
+    fun findOne(@PathVariable id: Long): ResponseEntity<OfficeTableDTO> {
         return service.findOne(id)?.let {
             ResponseEntity.ok(it)
         } ?: ResponseEntity.notFound().build()
     }
 
     @PostMapping("/")
-    fun create(@RequestBody office: OfficeEntity): ResponseEntity<OfficeDTO> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(office))
+    fun create(@RequestBody officeTable: OfficeTableEntity): ResponseEntity<OfficeTableDTO> {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(officeTable))
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody office: OfficeEntity): ResponseEntity<OfficeDTO?> {
+    fun update(@PathVariable id: Long, @RequestBody officeTable: OfficeTableEntity): ResponseEntity<OfficeTableDTO?> {
         return if (service.exists(id)) {
-            ResponseEntity.ok(service.update(id, office))
+            ResponseEntity.ok(service.update(id, officeTable))
         } else {
             ResponseEntity.notFound().build()
         }
@@ -52,12 +50,5 @@ import org.springframework.web.bind.annotation.*
         } else {
             ResponseEntity.notFound().build()
         }
-    }
-
-    @PatchMapping("/{officeId}/addTable")
-    fun addTable(@PathVariable officeId: Long, @RequestBody table: OfficeTableEntity): ResponseEntity<OfficeTableDTO> {
-        return service.addTableToOffice(officeId, table)?.toDTO()?.let {
-            ResponseEntity.status(HttpStatus.CREATED).body(it)
-        } ?: ResponseEntity.notFound().build()
     }
 }
