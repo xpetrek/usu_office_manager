@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.*
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 @Tag(
     name = "Office",
-)class OfficeController(private val service: OfficeService) {
+)
+class OfficeController(private val service: OfficeService) {
 
     @GetMapping("/")
     fun findAll(): ResponseEntity<List<OfficeDTO>> {
@@ -54,10 +55,21 @@ import org.springframework.web.bind.annotation.*
         }
     }
 
-    @PatchMapping("/{officeId}/addTable")
-    fun addTable(@PathVariable officeId: Long, @RequestBody table: OfficeTableEntity): ResponseEntity<OfficeTableDTO> {
-        return service.addTableToOffice(officeId, table)?.toDTO()?.let {
-            ResponseEntity.status(HttpStatus.CREATED).body(it)
-        } ?: ResponseEntity.notFound().build()
+    @PatchMapping("/{officeId}/updateTables")
+    fun updateOfficeTables(
+        @PathVariable officeId: Long,
+        @RequestBody request: UpdateOfficeTablesRequest
+    ): ResponseEntity<List<OfficeTableDTO>> {
+        return try {
+            val updatedTables = service.updateOfficeTables(officeId, request)
+            ResponseEntity.status(HttpStatus.OK).body(updatedTables)
+        } catch (e: IllegalStateException) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(emptyList())
+        }
     }
 }
+
+data class UpdateOfficeTablesRequest(
+    val addedTables: List<Long>,
+    val removedTables: List<Long>
+)

@@ -4,14 +4,14 @@ import com.example.demo.dto.EmployeeDTO
 import com.example.demo.dto.toDTO
 import com.usu.ulm.office_manager.entities.EmployeeEntity
 import com.usu.ulm.office_manager.repositories.EmployeeRepository
-import com.usu.ulm.office_manager.repositories.TableRepository
+import com.usu.ulm.office_manager.repositories.OfficeTableRepository
 import com.usu.ulm.office_manager.repositories.OfficeRepository
 import org.springframework.stereotype.Service
 
 @Service
 class EmployeeService(
     private val employeeRepository: EmployeeRepository,
-    private val tableRepository: TableRepository,
+    private val tableRepository: OfficeTableRepository,
     private val officeRepository: OfficeRepository
 ) {
 
@@ -49,21 +49,17 @@ class EmployeeService(
         val employee = employeeRepository.findById(employeeId).orElse(null) ?: return null
         val table = tableRepository.findById(tableId).orElse(null) ?: return null
 
-        // Ensure the table is in the same office or the employee has no office
-        if (employee.office != null && employee.office?.id != table.office?.id) {
-            // Adding logging or error throwing
+        if (employee.office.id != table.office?.id) {
             throw IllegalStateException("Cannot attach employee to a table in a different office.")
         }
 
-        // Update the employee's assigned table and, by association, their office if necessary
         val updatedEmployee = employee.copy(
             officeTable = table,
-            office = table.office ?: employee.office
+            office = table.office
         )
 
         employeeRepository.save(updatedEmployee)
 
-        // Update the table to reflect the employee assignment
         val updatedTable = table.copy(employee = updatedEmployee)
         tableRepository.save(updatedTable)
 
@@ -74,11 +70,9 @@ class EmployeeService(
         val employee = employeeRepository.findById(employeeId).orElse(null) ?: return null
         val office = officeRepository.findById(officeId).orElse(null) ?: return null
 
-        // Check if employee can be attached here (Can add more rules if needed)
         var updatedEmployee = employee.copy(office = office)
 
-        // Remove employee from current table if it exists and doesn't belong to the new office
-        if (employee.officeTable != null && employee.officeTable?.office?.id != office.id) {
+        if (employee.officeTable != null && employee.officeTable.office?.id != office.id) {
             updatedEmployee = updatedEmployee.copy(officeTable = null)
         }
 

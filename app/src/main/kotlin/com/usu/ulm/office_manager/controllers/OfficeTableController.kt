@@ -51,4 +51,22 @@ class OfficeTableController(private val service: TableService) {
             ResponseEntity.notFound().build()
         }
     }
+
+    @GetMapping("/unused")
+    fun getUnusedTables(): ResponseEntity<List<OfficeTableDTO>> {
+        val unusedTables = service.findUnusedTables()
+        return ResponseEntity.ok(unusedTables)
+    }
+
+    @GetMapping("/unplaced")
+    fun getUnplacedTables(): ResponseEntity<List<OfficeTableDTO>> {
+        val unusedTables = service.findUnusedTables()
+        return ResponseEntity.ok(unusedTables)
+    }
+
+    @GetMapping("/unplacedUnused")
+    fun getUnplacedUnusedTables(): ResponseEntity<List<OfficeTableDTO>> {
+        val unusedTables = service.findUnusedTables()
+        return ResponseEntity.ok(unusedTables)
+    }
 }

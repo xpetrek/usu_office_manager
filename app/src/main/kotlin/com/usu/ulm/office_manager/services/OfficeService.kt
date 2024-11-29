@@ -1,18 +1,21 @@
 package com.usu.ulm.office_manager.services
 
 import com.example.demo.dto.OfficeDTO
+import com.example.demo.dto.OfficeTableDTO
 import com.example.demo.dto.toDTO
+import com.usu.ulm.office_manager.controllers.UpdateOfficeTablesRequest
 import com.usu.ulm.office_manager.entities.OfficeEntity
 import com.usu.ulm.office_manager.entities.OfficeTableEntity
 import com.usu.ulm.office_manager.repositories.OfficeRepository
-import com.usu.ulm.office_manager.repositories.TableRepository
+import com.usu.ulm.office_manager.repositories.OfficeTableRepository
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class OfficeService(
     @Autowired private val officeRepository: OfficeRepository,
-    @Autowired private val tableRepository: TableRepository
+    @Autowired private val tableRepository: OfficeTableRepository
 ) {
 
     fun findAll(): List<OfficeDTO> {
@@ -69,5 +72,35 @@ class OfficeService(
         val office = officeRepository.findById(officeId).orElse(null) ?: return null
         val newTable = table.copy(office = office)
         return tableRepository.save(newTable)
+    }
+
+    @Transactional
+    fun updateOfficeTables(officeId: Long, request: UpdateOfficeTablesRequest): List<OfficeTableDTO> {
+        val office = officeRepository.findById(officeId).orElse(null)
+            ?: throw IllegalStateException("Office with ID $officeId not found.")
+
+        val addedTables = request.addedTables.mapNotNull { tableId ->
+            val table = tableRepository.findById(tableId).orElse(null)
+            if (table != null && table.office?.id != officeId) {
+                val updatedTable = table.copy(office = office)
+                tableRepository.save(updatedTable)
+                updatedTable.toDTO()
+            } else {
+                null
+            }
+        }
+
+        val removedTables = request.removedTables.mapNotNull { tableId ->
+            val table = tableRepository.findById(tableId).orElse(null)
+            if (table != null && table.office?.id == officeId) {
+                val updatedTable = table.copy(office = null)
+                tableRepository.save(updatedTable)
+                updatedTable.toDTO()
+            } else {
+                null
+            }
+        }
+
+        return addedTables + removedTables
     }
 }
