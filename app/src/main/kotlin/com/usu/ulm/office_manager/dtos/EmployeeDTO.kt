@@ -12,6 +12,22 @@ data class EmployeeDTO(
     val officeTableId: Long?
 )
 
+data class CreateEmployeeDTO(
+    val firstName: String,
+    val lastName: String,
+    val address: String,
+    val startDate: String,
+)
+
+data class EmployeeUpdateDTO(
+    val firstName: String,
+    val lastName: String,
+    val address: String,
+    val startDate: String,
+    val officeId: Long?,
+    val officeTableId: Long?
+)
+
 fun EmployeeEntity.toDTO() = EmployeeDTO(
     id = this.id,
     firstName = this.firstName,

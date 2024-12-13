@@ -1,6 +1,9 @@
 package com.usu.ulm.office_manager.controllers
 
+import com.example.demo.dto.CreateOfficeDTO
 import com.example.demo.dto.OfficeTableDTO
+import com.example.demo.dto.OfficeTableUpdateDTO
+import com.example.demo.dto.toDTO
 import com.usu.ulm.office_manager.entities.OfficeTableEntity
 import com.usu.ulm.office_manager.services.TableService
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -29,14 +32,19 @@ class OfficeTableController(private val service: TableService) {
     }
 
     @PostMapping("/")
-    fun create(@RequestBody officeTable: OfficeTableEntity): ResponseEntity<OfficeTableDTO> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(officeTable))
+    fun create(@RequestBody createOfficeDTO: CreateOfficeDTO): ResponseEntity<OfficeTableDTO> {
+        val newOfficeTable = service.create(createOfficeDTO)
+        return ResponseEntity.status(HttpStatus.CREATED).body(newOfficeTable)
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody officeTable: OfficeTableEntity): ResponseEntity<OfficeTableDTO?> {
+    fun update(
+        @PathVariable id: Long,
+        @RequestBody officeTableUpdateDTO: OfficeTableUpdateDTO
+    ): ResponseEntity<OfficeTableDTO?> {
         return if (service.exists(id)) {
-            ResponseEntity.ok(service.update(id, officeTable))
+            val updatedTable = service.update(id, officeTableUpdateDTO)
+            ResponseEntity.ok(updatedTable?.toDTO())
         } else {
             ResponseEntity.notFound().build()
         }
@@ -60,13 +68,13 @@ class OfficeTableController(private val service: TableService) {
 
     @GetMapping("/unplaced")
     fun getUnplacedTables(): ResponseEntity<List<OfficeTableDTO>> {
-        val unusedTables = service.findUnusedTables()
+        val unusedTables = service.findUnplacedTables()
         return ResponseEntity.ok(unusedTables)
     }
 
     @GetMapping("/unplacedUnused")
     fun getUnplacedUnusedTables(): ResponseEntity<List<OfficeTableDTO>> {
-        val unusedTables = service.findUnusedTables()
+        val unusedTables = service.findUnplacedUnusedTables()
         return ResponseEntity.ok(unusedTables)
     }
 }

@@ -9,17 +9,17 @@ import jakarta.persistence.*
 data class EmployeeEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id")
-    val id: Long = 0,
-    val firstName: String,
-    val lastName: String,
-    val address: String,
-    val startDate: String,
+    var id: Long = 0,
+    var firstName: String,
+    var lastName: String,
+    var address: String,
+    var startDate: String,
 
     @OneToOne
     @JoinColumn(name = "office_table_id")
-    val officeTable: OfficeTableEntity? = null,
+    var officeTable: OfficeTableEntity? = null,
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "office_id")
-    val office: OfficeEntity
+    var office: OfficeEntity? = null,
 )

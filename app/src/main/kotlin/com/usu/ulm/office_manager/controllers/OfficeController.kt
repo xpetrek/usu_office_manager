@@ -1,8 +1,6 @@
 package com.usu.ulm.office_manager.controllers
 
-import com.example.demo.dto.OfficeDTO
-import com.example.demo.dto.OfficeTableDTO
-import com.example.demo.dto.toDTO
+import com.example.demo.dto.*
 import com.usu.ulm.office_manager.entities.OfficeEntity
 import com.usu.ulm.office_manager.entities.OfficeTableEntity
 import com.usu.ulm.office_manager.services.OfficeService
@@ -32,14 +30,16 @@ class OfficeController(private val service: OfficeService) {
     }
 
     @PostMapping("/")
-    fun create(@RequestBody office: OfficeEntity): ResponseEntity<OfficeDTO> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(office))
+    fun create(@RequestBody createOfficeDTO: CreateOfficeDTO): ResponseEntity<OfficeDTO> {
+        val newOffice = service.create(createOfficeDTO)
+        return ResponseEntity.status(HttpStatus.CREATED).body(newOffice)
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody office: OfficeEntity): ResponseEntity<OfficeDTO?> {
+    fun update(@PathVariable id: Long, @RequestBody officeUpdateDTO: OfficeUpdateDTO): ResponseEntity<OfficeDTO?> {
         return if (service.exists(id)) {
-            ResponseEntity.ok(service.update(id, office))
+            val updatedOffice = service.update(id, officeUpdateDTO)
+            ResponseEntity.ok(updatedOffice?.toDTO())
         } else {
             ResponseEntity.notFound().build()
         }

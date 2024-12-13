@@ -10,6 +10,12 @@ data class OfficeTableDTO(
     val employeeId: Long?
 )
 
+data class OfficeTableUpdateDTO(
+    val name: String,
+    val utilizedArea: Long,
+    val officeId: Long?,
+    val employeeId: Long?
+)
 
 fun OfficeTableEntity.toDTO() = OfficeTableDTO(
     id = this.id,

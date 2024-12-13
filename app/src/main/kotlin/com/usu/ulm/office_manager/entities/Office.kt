@@ -8,10 +8,10 @@ import jakarta.persistence.*
 data class OfficeEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "office_id")
-    val id: Long = 0,
-    val name: String,
-    val area: Int,
+    var id: Long = 0,
+    var name: String,
+    var area: Long,
 
     @OneToMany(mappedBy = "office")
-    val tables: List<OfficeTableEntity>? = null,
+    var tables: List<OfficeTableEntity>? = null,
 )

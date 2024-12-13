@@ -5,8 +5,19 @@ import com.usu.ulm.office_manager.entities.OfficeEntity
 data class OfficeDTO(
     val id: Long,
     val name: String,
-    val area: Int,
+    val area: Long,
     val tableIds: List<Long>
+)
+
+data class CreateOfficeDTO(
+    val name: String,
+    val area: Long,
+)
+
+data class OfficeUpdateDTO(
+    val name: String,
+    val area: Long,
+    val tableIds: List<Long>?
 )
 
 fun OfficeEntity.toDTO() = OfficeDTO(

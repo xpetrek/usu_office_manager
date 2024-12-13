@@ -1,8 +1,6 @@
 package com.usu.ulm.office_manager.services
 
-import com.example.demo.dto.OfficeDTO
-import com.example.demo.dto.OfficeTableDTO
-import com.example.demo.dto.toDTO
+import com.example.demo.dto.*
 import com.usu.ulm.office_manager.controllers.UpdateOfficeTablesRequest
 import com.usu.ulm.office_manager.entities.OfficeEntity
 import com.usu.ulm.office_manager.entities.OfficeTableEntity
@@ -26,19 +24,34 @@ class OfficeService(
         return officeRepository.findById(id).orElse(null)?.toDTO()
     }
 
-    fun create(office: OfficeEntity): OfficeDTO {
-        val savedEntity = officeRepository.save(office)
+    fun create(createOfficeDTO: CreateOfficeDTO): OfficeDTO {
+        val officeEntity = OfficeEntity(
+            name = createOfficeDTO.name,
+            area = createOfficeDTO.area,
+            tables = null
+        )
+
+        val savedEntity = officeRepository.save(officeEntity)
         return savedEntity.toDTO()
     }
 
-    fun update(id: Long, updatedOffice: OfficeEntity): OfficeDTO? {
-        return if (officeRepository.existsById(id)) {
-            val savedEntity = officeRepository.save(updatedOffice.copy(id = id))
-            savedEntity.toDTO()
-        } else {
-            null
+    @Transactional
+    fun update(id: Long, updateDTO: OfficeUpdateDTO): OfficeEntity? {
+        val office = officeRepository.findById(id).orElse(null) ?: return null
+
+        office.apply {
+            name = updateDTO.name
+            area = updateDTO.area
         }
+
+        if (updateDTO.tableIds != null) {
+            val tables = tableRepository.findAllById(updateDTO.tableIds)
+            office.tables = tables.toList()
+        }
+
+        return officeRepository.save(office)
     }
+
 
     fun delete(id: Long) {
         if (officeRepository.existsById(id)) {

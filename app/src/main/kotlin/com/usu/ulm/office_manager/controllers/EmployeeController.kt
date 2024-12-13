@@ -1,6 +1,9 @@
 package com.usu.ulm.office_manager.controllers
 
+import com.example.demo.dto.CreateEmployeeDTO
 import com.example.demo.dto.EmployeeDTO
+import com.example.demo.dto.EmployeeUpdateDTO
+import com.example.demo.dto.toDTO
 import com.usu.ulm.office_manager.entities.EmployeeEntity
 import com.usu.ulm.office_manager.services.EmployeeService
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -29,14 +32,15 @@ class EmployeeController(private val service: EmployeeService) {
     }
 
     @PostMapping("/")
-    fun create(@RequestBody employee: EmployeeEntity): ResponseEntity<EmployeeDTO> {
+    fun create(@RequestBody employee: CreateEmployeeDTO): ResponseEntity<EmployeeDTO> {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(employee))
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody employee: EmployeeEntity): ResponseEntity<EmployeeDTO?> {
+    fun update(@PathVariable id: Long, @RequestBody employeeUpdateDTO: EmployeeUpdateDTO): ResponseEntity<EmployeeDTO?> {
         return if (service.exists(id)) {
-            ResponseEntity.ok(service.update(id, employee))
+            val updatedEmployee = service.update(id, employeeUpdateDTO)
+            ResponseEntity.ok(updatedEmployee?.toDTO())
         } else {
             ResponseEntity.notFound().build()
         }
